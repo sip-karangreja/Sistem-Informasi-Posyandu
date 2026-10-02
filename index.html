@@ -4,38 +4,255 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistem Posyandu Harapan Bahagia</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome untuk Icon Input (Username, Password, dll) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === RESET & FONT === */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7fa; color: #333; overflow-x: hidden; }
+
+        /* === HALAMAN LOGIN (Sesuai Desain Gambar) === */
+        /* Menggunakan gambar ilustrasi sebagai background penuh */
+        .login-wrapper { 
+            display: flex; 
+            justify-content: flex-end; /* Memposisikan form di sebelah kanan */
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 2rem; 
+            background: url('WhatsApp Image 2026-09-18 at 10.15.57 PM (1).jpeg') no-repeat center center; 
+            background-size: cover;
+            position: relative;
+        }
+
+        /* Overlay tipis agar card login lebih terbaca jika background terlalu ramai */
+        .login-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.15); /* Transparansi sangat tipis */
+        }
+
+        .login-card { 
+            background: #ffffff; 
+            width: 100%; 
+            max-width: 420px; 
+            padding: 2.5rem 2.5rem; 
+            border-radius: 20px; /* Sudut lebih membulat sesuai desain */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+            position: relative; 
+            z-index: 10;
+            border: 2px solid #0056b3; /* Garis tepi biru tipis */
+        }
+
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        
+        /* Logo Posyandu (Placeholder logo bulat) */
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 50%;
+            border: 3px solid #8e44ad; /* Warna ungu pinggiran logo */
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #27ae60;
+        }
+
+        .login-header h2 { 
+            color: #8e44ad; /* Warna ungu teks POSYANDU */
+            font-size: 1.6rem; 
+            margin-bottom: 2px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        .login-header h3 {
+            color: #d35400; /* Warna orange teks HARAPAN BAHAGIA */
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        .login-header h4 {
+            color: #27ae60; /* Warna hijau teks KARANGREJA */
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .login-header p { 
+            color: #c0392b; /* Merah untuk slogan */
+            font-size: 0.9rem; 
+            font-weight: 600;
+        }
+
+        /* Form Input dengan Icon */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.2rem;
+        }
+        .input-group i.fa-solid {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 1.1rem;
+        }
+        .input-group input { 
+            width: 100%; 
+            padding: 12px 15px 12px 45px; /* Padding kiri lebih besar untuk icon */
+            border: 1px solid #aaa; 
+            border-radius: 10px; 
+            font-size: 1rem; 
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus { border-color: #27ae60; }
+        .input-group .fa-eye {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            cursor: pointer;
+        }
+
+        .login-options { 
+            display: flex;
+            align-items: center; 
+            margin-bottom: 20px; 
+            font-size: 0.95rem; 
+            color: #555;
+        }
+        .login-options input[type="checkbox"] { margin-right: 8px; transform: scale(1.2); }
+        
+        .btn-login-main { 
+            width: 100%; 
+            padding: 14px; 
+            background: #27ae60; /* Hijau tombol login */
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: background 0.2s; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-login-main:hover { background: #219150; }
+
+        .login-footer-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #0056b3;
+            font-weight: 600;
+        }
+        .login-footer-links a { color: #0056b3; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .login-footer-links a:hover { text-decoration: underline; }
+
+        /* Responsif untuk Mobile (Card login ke tengah) */
+        @media (max-width: 768px) {
+            .login-wrapper { justify-content: center; padding: 1rem; }
+        }
+
+
+        /* === DASHBOARD APLIKASI (Minimalis) === */
+        .navbar { background-color: #0d6efd; color: white; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-logout { background: transparent; border: 1px solid white; color: white; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+        .btn-logout:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 900px; margin: 1.5rem auto; padding: 0 1rem; }
+        
+        .search-box { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .search-box input { flex: 1; padding: 12px; border: 1px solid #ccd; border-radius: 6px; font-size: 1rem; min-width: 200px; }
+        .search-box button { padding: 12px 20px; background: #198754; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; max-width: 120px; }
+
+        .empty-state { text-align: center; padding: 3rem 1rem; background: white; border-radius: 8px; color: #666; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .profile-card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .profil-header h2 { margin-bottom: 10px; color: #0d6efd; }
+        .profil-info p { margin: 5px 0; color: #555; font-size: 0.95rem; }
+        .btn-tambah { width: 100%; background: #0d6efd; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; font-size: 1rem; }
+
+        /* === MODAL & FORM (Minimalis) === */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; padding: 1rem; z-index: 1000; }
+        .modal-content { background: white; padding: 1.5rem; border-radius: 10px; width: 100%; max-width: 500px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #666; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: #444; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+        .form-row { display: flex; gap: 10px; }
+        .form-row .form-group { flex: 1; }
+        .req { color: red; }
+        .btn-submit { width: 100%; padding: 14px; background: #198754; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+        .hidden { display: none !important; }
+
+        /* === CUSTOM ALERT === */
+        .custom-alert { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 1rem; }
+        .alert-box { background: #ffffff; width: 100%; max-width: 320px; border-radius: 12px; padding: 24px 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease-out; }
+        .alert-title { font-size: 1.25rem; font-weight: 700; color: #333; margin-bottom: 10px; }
+        .alert-message { font-size: 0.95rem; color: #555; margin-bottom: 24px; }
+        .alert-actions { display: flex; gap: 10px; justify-content: center; }
+        .btn-alert { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn-alert-cancel { background: #e9ecef; color: #495057; }
+        .btn-alert-confirm { background: #0d6efd; color: white; }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+    </style>
 </head>
 <body>
 
-    <!-- HALAMAN LOGIN -->
+    <!-- ==========================================
+         HALAMAN LOGIN
+    ========================================== -->
     <div id="loginSection" class="login-wrapper">
         <div class="login-card">
             <div class="login-header">
-                <h2>Posyandu Harapan Bahagia</h2>
-                <p>Desa Karangreja</p>
+                <!-- Logo Bulat (Menggunakan ikon fontawesome sementara) -->
+                <div class="login-logo">
+                    <i class="fa-solid fa-people-group"></i>
+                </div>
+                <h2>POSYANDU</h2>
+                <h3>HARAPAN BAHAGIA</h3>
+                <h4>KARANGREJA</h4>
+                <p><i class="fa-regular fa-heart"></i> Sehat Bersama, Tumbuh Bahagia <i class="fa-regular fa-heart"></i></p>
             </div>
+            
             <form id="loginForm" onsubmit="prosesLogin(event)">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="username" placeholder="Masukkan username admin/kader" required>
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" placeholder="Username" required>
                 </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="password" placeholder="Masukkan password" required>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <i class="fa-solid fa-eye" id="togglePassword" onclick="togglePass()"></i>
                 </div>
-                <div class="form-row login-options">
-                    <label class="remember-me">
+                
+                <div class="login-options">
+                    <label>
                         <input type="checkbox" id="rememberMe"> Ingat Saya
                     </label>
-                    <a href="#" class="forgot-pwd" onclick="alert('Silakan hubungi Bidan Desa untuk reset password.')">Lupa Password?</a>
                 </div>
-                <button type="submit" class="btn-submit" id="btnLogin">LOGIN MASUK</button>
+                
+                <button type="submit" class="btn-login-main" id="btnLogin">
+                    <i class="fa-solid fa-heart-pulse"></i> LOGIN
+                </button>
+
+                <div class="login-footer-links">
+                    <a href="#" onclick="alert('Silakan hubungi Bidan Desa untuk reset password.')"><i class="fa-solid fa-lock-open"></i> Lupa Password?</a>
+                    <a href="#"><i class="fa-solid fa-headset"></i> Hubungi Admin</a>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- HALAMAN DASHBOARD & APLIKASI (Disembunyikan di awal) -->
+    <!-- ==========================================
+         HALAMAN DASHBOARD (Disembunyikan di awal)
+    ========================================== -->
     <div id="dashboardSection" class="hidden">
         <nav class="navbar">
             <div class="brand">Posyandu Harapan Bahagia</div>
@@ -51,14 +268,16 @@
             <div id="loading" class="hidden">Memuat data dari server...</div>
             <section id="contentArea">
                 <div class="empty-state">
-                    <h3>Selamat Datang!</h3>
+                    <h3>Selamat Datang di Aplikasi Posyandu!</h3>
                     <p>Silakan cari data peserta menggunakan nama atau NIK di atas.</p>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- Modal Form Input Hybrid -->
+    <!-- ==========================================
+         MODAL FORM REKAM MEDIS
+    ========================================== -->
     <div id="modalRekamMedis" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="tutupModal()">&times;</span>
@@ -95,16 +314,6 @@
                             <input type="number" id="gula">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Kolesterol</label>
-                            <input type="number" id="kolesterol">
-                        </div>
-                        <div class="form-group">
-                            <label>Asam Urat</label>
-                            <input type="number" step="0.1" id="asam_urat">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="form-group">
@@ -117,7 +326,9 @@
         </div>
     </div>
 
-    <!-- Custom Alert Overlay -->
+    <!-- ==========================================
+         CUSTOM ALERT
+    ========================================== -->
     <div id="customAlert" class="custom-alert hidden">
         <div class="alert-box">
             <h3 id="alertTitle" class="alert-title">Judul</h3>
@@ -129,6 +340,169 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- ==========================================
+         JAVASCRIPT
+    ========================================== -->
+    <script>
+        // Fitur Toggle Show/Hide Password di Form Login
+        function togglePass() {
+            const passInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('togglePassword');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                passInput.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        }
+
+        // --- Logika Login ---
+        async function prosesLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memeriksa...';
+            btn.disabled = true;
+
+            await new Promise(r => setTimeout(r, 800)); // Simulasi loading
+
+            if (user === 'admin' || user === 'kader') {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.remove('hidden');
+                // Mengembalikan warna body ke abu-abu terang (menghilangkan sisa warna gambar jika ada)
+                document.body.style.background = "#f4f7fa"; 
+            } else {
+                await tampilkanAlert("Login Gagal", "Username/Password salah. Ketik 'admin' atau 'kader'.", "info");
+            }
+
+            btn.innerHTML = '<i class="fa-solid fa-heart-pulse"></i> LOGIN';
+            btn.disabled = false;
+        }
+
+        function prosesLogout() {
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+            // Kembalikan background ke mode form (meski sudah diset di CSS wrapper)
+            document.getElementById('contentArea').innerHTML = `<div class="empty-state"><h3>Selamat Datang!</h3><p>Silakan cari data peserta.</p></div>`;
+            document.getElementById('searchInput').value = "";
+        }
+
+        // --- Custom Alert ---
+        function tampilkanAlert(judul, pesan, tipe = 'info') {
+            return new Promise((resolve) => {
+                const alertUI = document.getElementById('customAlert');
+                const btnCancel = document.getElementById('alertBtnCancel');
+                const btnConfirm = document.getElementById('alertBtnConfirm');
+
+                document.getElementById('alertTitle').innerText = judul;
+                document.getElementById('alertMsg').innerText = pesan;
+
+                if (tipe === 'confirm') {
+                    btnCancel.classList.remove('hidden');
+                    btnConfirm.innerText = "Ya, Lanjutkan";
+                    btnConfirm.style.background = "#198754"; 
+                } else {
+                    btnCancel.classList.add('hidden');
+                    btnConfirm.innerText = "OK";
+                    btnConfirm.style.background = "#27ae60"; // Hijau Login
+                }
+
+                alertUI.classList.remove('hidden');
+                btnCancel.onclick = () => { alertUI.classList.add('hidden'); resolve(false); };
+                btnConfirm.onclick = () => { alertUI.classList.add('hidden'); resolve(true); };
+            });
+        }
+
+        // --- Logika Pencarian Dummy ---
+        async function cariData() {
+            const keyword = document.getElementById('searchInput').value;
+            const content = document.getElementById('contentArea');
+            const loading = document.getElementById('loading');
+
+            if (!keyword) {
+                await tampilkanAlert("Peringatan", "Harap masukkan NIK atau Nama Peserta!", "info");
+                return;
+            }
+
+            content.innerHTML = '';
+            loading.classList.remove('hidden');
+            await new Promise(r => setTimeout(r, 600));
+            
+            const dummyData = [
+                { NIK: "3173024201620004", NAMA_PESERTA: "ABYAN HARIS MAULANA", KATEGORI_USIA: "Balita", USIA: 4, NAMA_IBU: "Ibu Abyan", NAMA_KK: "Bapak Abyan", DUSUN: "Krajan", RT: "01", RW: "02" },
+                { NIK: "3301076005720001", NAMA_PESERTA: "SITI AMINAH", KATEGORI_USIA: "Dewasa", USIA: 35, NAMA_IBU: "-", NAMA_KK: "Bapak Siti", DUSUN: "Kampung Baru", RT: "03", RW: "01" }
+            ];
+
+            const results = dummyData.filter(p => p.NAMA_PESERTA.toLowerCase().includes(keyword.toLowerCase()) || p.NIK.includes(keyword));
+            loading.classList.add('hidden');
+
+            if (results.length > 0) { renderProfil(results[0]); } 
+            else { content.innerHTML = '<div class="empty-state">Data peserta tidak ditemukan.</div>'; }
+        }
+
+        function renderProfil(data) {
+            const labelUsia = data.KATEGORI_USIA === 'Balita' ? `${data.USIA} Tahun (Balita)` : `${data.USIA} Tahun`;
+            document.getElementById('contentArea').innerHTML = `
+                <div class="profile-card">
+                    <div class="profil-header">
+                        <h2>${data.NAMA_PESERTA}</h2>
+                        <div class="profil-info">
+                            <p><strong>NIK:</strong> ${data.NIK}</p>
+                            <p><strong>Nama KK:</strong> ${data.NAMA_KK}</p>
+                            <p><strong>Usia:</strong> ${labelUsia} | <strong>Nama Ibu:</strong> ${data.NAMA_IBU}</p>
+                            <p><strong>Alamat:</strong> Dusun ${data.DUSUN} RT ${data.RT}/RW ${data.RW}</p>
+                        </div>
+                    </div>
+                    <button class="btn-tambah" onclick="bukaModal('${data.NIK}', '${data.NAMA_PESERTA}', '${data.KATEGORI_USIA}', '${data.NAMA_IBU}')">
+                        + Input Rekam Medis
+                    </button>
+                </div>
+            `;
+        }
+
+        // --- Logika Modal ---
+        function bukaModal(nik, nama, kategori, namaIbu) {
+            document.getElementById('modalTitle').innerText = `Rekam Medis: ${nama}`;
+            document.getElementById('formNik').value = nik;
+            document.getElementById('formKategori').value = kategori;
+            
+            if (kategori === 'Balita') {
+                document.getElementById('groupNamaIbu').classList.remove('hidden');
+                document.getElementById('namaIbu').required = true;
+                document.getElementById('namaIbu').value = (namaIbu && namaIbu !== '-') ? namaIbu : '';
+                document.getElementById('fieldPTM').classList.add('hidden'); 
+            } else {
+                document.getElementById('groupNamaIbu').classList.add('hidden');
+                document.getElementById('namaIbu').required = false;
+                document.getElementById('fieldPTM').classList.remove('hidden'); 
+            }
+            document.getElementById('modalRekamMedis').classList.remove('hidden');
+        }
+
+        function tutupModal() {
+            document.getElementById('modalRekamMedis').classList.add('hidden');
+            document.getElementById('formRM').reset();
+        }
+
+        async function tanganiSimpanData(e) {
+            e.preventDefault();
+            const konfirmasi = await tampilkanAlert("Konfirmasi Simpan", "Apakah Anda yakin data kesehatan yang diinput sudah benar?", "confirm");
+            if (!konfirmasi) return;
+            const btn = document.getElementById('btnSubmitRM');
+            btn.innerText = 'Menyimpan...';
+            btn.disabled = true;
+            await new Promise(r => setTimeout(r, 1000));
+            tutupModal();
+            await tampilkanAlert("Berhasil", "Data rekam medis berhasil disimpan!", "info");
+            btn.innerText = 'Simpan Rekam Medis';
+            btn.disabled = false;
+        }
+    </script>
 </body>
 </html>
