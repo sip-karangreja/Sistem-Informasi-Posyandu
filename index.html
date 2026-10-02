@@ -2,181 +2,131 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi Posyandu Harapan Bahagia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Posyandu Harapan Bahagia</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-layout">
-        <!-- BILAH SAMPING (SIDEBAR) -->
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-icon">👥</div>
-                <div class="brand-text">
-                    <h2>Posyandu Harapan Bahagia</h2>
-                    <p>Desa Karangreja</p>
-                </div>
+
+    <!-- HALAMAN LOGIN -->
+    <div id="loginSection" class="login-wrapper">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Posyandu Harapan Bahagia</h2>
+                <p>Desa Karangreja</p>
             </div>
-            <ul class="sidebar-menu">
-                <li class="active"><a href="#" id="menuBeranda">🏠 Beranda</a></li>
-                <li><a href="#" id="menuDataPeserta">👥 Data Peserta</a></li>
-                <li><a href="#">🩺 Layanan Posyandu</a></li>
-                <li><a href="#">📊 Rekap Laporan</a></li>
-                <li><a href="#">⚙️ Pengaturan</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <img src="https://via.placeholder.com/150x80?text=Ilustrasi+Posyandu" alt="Ilustrasi" class="sidebar-illustration">
-                <p>Posyandu Melayani dengan Hati</p>
-            </div>
-        </aside>
-
-        <!-- KONTEN UTAMA -->
-        <main class="main-content">
-            <!-- NAVIGASI ATAS -->
-            <header class="topbar">
-                <div class="tagline">🌱 Sehat Bersama Menuju Generasi Emas</div>
-                <div class="user-profile">
-                    <div class="user-avatar">👤</div>
-                    <div class="user-info">
-                        <span class="user-name">Petugas Posyandu</span>
-                        <span class="user-role">Kader Posyandu</span>
-                    </div>
+            <form id="loginForm" onsubmit="prosesLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Masukkan username admin/kader" required>
                 </div>
-            </header>
-
-            <!-- TAMPILAN 1: BERANDA / DASHBOARD -->
-            <section id="viewDashboard" class="view-section">
-                <div class="welcome-banner">
-                    <div class="banner-text">
-                        <p class="date-text">Rabu, 10 September 2025</p>
-                        <h1>Selamat Datang di Sistem Informasi Posyandu Harapan Bahagia</h1>
-                        <p>Data peserta posyandu yang sehat, keluarga yang kuat, desa yang sejahtera.</p>
-                    </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
                 </div>
-
-                <div class="search-container">
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="searchInput" placeholder="Cari berdasarkan nama/NIK...">
-                        <button class="btn-search" onclick="cariData()">Cari</button>
-                        <button class="btn-filter">♈</button>
-                    </div>
+                <div class="form-row login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe"> Ingat Saya
+                    </label>
+                    <a href="#" class="forgot-pwd" onclick="alert('Silakan hubungi Bidan Desa untuk reset password.')">Lupa Password?</a>
                 </div>
+                <button type="submit" class="btn-submit" id="btnLogin">LOGIN MASUK</button>
+            </form>
+        </div>
+    </div>
 
-                <!-- Grid Dasbor -->
-                <div class="dashboard-grid">
-                    <!-- Jumlah Total Peserta -->
-                    <div class="card card-total">
-                        <h3>Jumlah Total Peserta</h3>
-                        <div class="total-value">
-                            <span class="number">324</span> <span class="unit">orang</span>
-                        </div>
-                        <div class="trend text-success">↑ 12 dari bulan lalu</div>
-                    </div>
+    <!-- HALAMAN DASHBOARD & APLIKASI (Disembunyikan di awal) -->
+    <div id="dashboardSection" class="hidden">
+        <nav class="navbar">
+            <div class="brand">Posyandu Harapan Bahagia</div>
+            <button class="btn-logout" onclick="prosesLogout()">Logout</button>
+        </nav>
 
-                    <!-- Chart Demografi -->
-                    <div class="card card-gender">
-                        <h3>Peserta Laki-Laki dan Perempuan</h3>
-                        <div class="chart-placeholder">[Diagram Donat: Laki-Laki 48,1% | Perempuan 51,9%]</div>
-                    </div>
-
-                    <!-- Chart Kategori Usia -->
-                    <div class="card card-age">
-                        <h3>Peserta Berdasarkan Kategori Usia</h3>
-                        <div class="chart-placeholder">[Grafik Batang: 0-1, 2-5, 6-12, 13-18, 19-59, ≥60 Tahun]</div>
-                    </div>
-
-                    <!-- Penyakit Terbanyak -->
-                    <div class="card card-disease">
-                        <h3>Jenis Penyakit Terbanyak</h3>
-                        <ul class="list-progress">
-                            <li><span>1. ISPA</span> <span class="percent">42 (12,9%)</span></li>
-                            <li><span>2. Diare</span> <span class="percent">28 (8,6%)</span></li>
-                            <li><span>3. Demam</span> <span class="percent">26 (8,0%)</span></li>
-                        </ul>
-                    </div>
-                </div>
+        <main class="container">
+            <section class="search-box">
+                <input type="text" id="searchInput" placeholder="Ketik NIK, Nama Peserta, atau Nama Ibu...">
+                <button onclick="cariData()">Cari Data</button>
             </section>
 
-            <!-- TAMPILAN 2: PROFIL PESERTA -->
-            <section id="viewProfil" class="view-section hidden">
-                <div class="search-container">
-                    <div class="search-box">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="searchProfilInput" placeholder="Cari berdasarkan nama/NIK...">
-                        <button class="btn-search">Cari</button>
-                        <button class="btn-filter">♈</button>
-                    </div>
-                </div>
-
-                <!-- Kartu Header Profil -->
-                <div class="profile-header-card">
-                    <div class="profile-identity">
-                        <div class="profile-photo-large">👤</div>
-                        <div class="profile-details">
-                            <h2 id="profNama">Siti Nurhaliza</h2>
-                            <div class="info-grid">
-                                <span><strong>NIK</strong></span> <span id="profNik">3201015208040001</span>
-                                <span><strong>No. KK</strong></span> <span id="profKk">3201010101234567</span>
-                                <span><strong>Tanggal Lahir</strong></span> <span id="profLahir">12 Agustus 2004 (21 tahun)</span>
-                                <span><strong>Jenis Kelamin</strong></span> <span id="profGender">Perempuan</span>
-                                <span><strong>Alamat</strong></span> <span id="profAlamat">Dusun Krajan RT 02/RW 01, Karangreja</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="profile-health-status">
-                        <div class="status-header">
-                            <h3>Riwayat Kesehatan</h3>
-                            <span class="badge badge-active">Aktif</span>
-                        </div>
-                        <p><strong>Terakhir diperiksa:</strong> <span id="profTglPeriksa">12 Agustus 2025</span></p>
-                        <p><strong>Posyandu:</strong> Posyandu Harapan Bahagia</p>
-                        <p><strong>Kader:</strong> <span id="profKader">Ibu Sulastri</span></p>
-                        <button class="btn-primary mt-10" onclick="bukaModal()">+ Input Rekam Medis</button>
-                    </div>
-                </div>
-
-                <!-- Tab Navigasi Profil -->
-                <div class="profile-tabs">
-                    <button class="tab-btn active">📈 Riwayat Kesehatan</button>
-                    <button class="tab-btn">📋 Catatan Rekam Medis</button>
-                    <button class="tab-btn">🏠 Data Keluarga</button>
-                    <button class="tab-btn">📅 Layanan Posyandu</button>
-                </div>
-
-                <!-- Konten Tab Riwayat Kesehatan -->
-                <div class="tab-content grid-layout">
-                    <div class="charts-area">
-                        <h3>Grafik Riwayat Kesehatan Bulanan</h3>
-                        <div class="chart-grid">
-                            <div class="chart-box">[Grafik Tinggi Badan (158 cm)]</div>
-                            <div class="chart-box">[Grafik Berat Badan (52 kg)]</div>
-                            <div class="chart-box">[Grafik Tensi Darah (120/80)]</div>
-                            <div class="chart-box">[Grafik Gula Darah (95)]</div>
-                            <div class="chart-box">[Grafik Lingkar Perut (78 cm)]</div>
-                        </div>
-                    </div>
-                    <div class="timeline-area">
-                        <h3>Catatan Rekam Medis</h3>
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="tl-date">12 Agustus 2025 <span>Petugas: Ibu Sulastri</span></div>
-                                <div class="tl-desc">Kondisi umum baik. Berat badan 52 kg, tinggi badan 158 cm, Tensi 120/80 mmHg...</div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="tl-date">15 Juli 2025 <span>Petugas: Ibu Sulastri</span></div>
-                                <div class="tl-desc">Dalam batas normal. Diberikan vitamin dan edukasi gizi seimbang.</div>
-                            </div>
-                        </div>
-                    </div>
+            <div id="loading" class="hidden">Memuat data dari server...</div>
+            <section id="contentArea">
+                <div class="empty-state">
+                    <h3>Selamat Datang!</h3>
+                    <p>Silakan cari data peserta menggunakan nama atau NIK di atas.</p>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- MODAL INPUT REKAM MEDIS (Dari versi sebelumnya) -->
+    <!-- Modal Form Input Hybrid -->
     <div id="modalRekamMedis" class="modal hidden">
-        <!-- Isi modal tetap sama seperti sebelumnya -->
+        <div class="modal-content">
+            <span class="close-btn" onclick="tutupModal()">&times;</span>
+            <h2 id="modalTitle">Input Rekam Medis</h2>
+            <br>
+            <form id="formRM" onsubmit="tanganiSimpanData(event)">
+                <input type="hidden" id="formNik">
+                <input type="hidden" id="formKategori">
+                
+                <div class="form-group hidden" id="groupNamaIbu">
+                    <label>Nama Ibu (Wajib Terisi) <span class="req">*</span></label>
+                    <input type="text" id="namaIbu">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Berat Badan (Kg)</label>
+                        <input type="number" step="0.1" id="bb" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tinggi Badan (Cm)</label>
+                        <input type="number" step="0.1" id="tb" required>
+                    </div>
+                </div>
+
+                <div id="fieldPTM" class="hidden">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status Tensi (mmHg)</label>
+                            <input type="text" id="tensi" placeholder="120/80">
+                        </div>
+                        <div class="form-group">
+                            <label>Gula Darah (mg/dL)</label>
+                            <input type="number" id="gula">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Kolesterol</label>
+                            <input type="number" id="kolesterol">
+                        </div>
+                        <div class="form-group">
+                            <label>Asam Urat</label>
+                            <input type="number" step="0.1" id="asam_urat">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Catatan Pemeriksaan</label>
+                    <textarea id="catatan" rows="3" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="btnSubmitRM">Simpan Rekam Medis</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Alert Overlay -->
+    <div id="customAlert" class="custom-alert hidden">
+        <div class="alert-box">
+            <h3 id="alertTitle" class="alert-title">Judul</h3>
+            <p id="alertMsg" class="alert-message">Pesan alert.</p>
+            <div class="alert-actions">
+                <button id="alertBtnCancel" class="btn-alert btn-alert-cancel">Batal</button>
+                <button id="alertBtnConfirm" class="btn-alert btn-alert-confirm">OK</button>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>
