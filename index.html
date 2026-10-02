@@ -12,38 +12,17 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f7fa; color: #333; overflow-x: hidden; }
 
-        /* === HALAMAN LOGIN (Sesuai Desain Gambar) === */
-        /* Menggunakan latar warna lembut sesuai gambar referensi terbaru */
+        /* === HALAMAN LOGIN === */
         .login-wrapper { 
             display: flex; 
             justify-content: flex-end; /* Memposisikan form di sebelah kanan */
             align-items: center; 
             min-height: 100vh; 
             padding: 2rem; 
-            background-color: #e6f6f5; /* Warna hijau tosca sangat pucat (soft) */
+            /* Menggunakan ./ untuk merujuk ke folder yang sama secara eksplisit */
+            background: url('./bg-login.png') center center / cover no-repeat;
+            background-color: #e6f6f5; /* Warna cadangan jika gambar gagal dimuat */
             position: relative;
-        }
-
-        /* Dihapus: overlay tipis karena sudah tidak pakai gambar background */
-
-        .login-card { 
-            background: #ffffff; 
-            width: 100%; 
-            max-width: 420px; 
-            padding: 2.5rem 2.5rem; 
-            border-radius: 20px; /* Sudut membulat */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Shadow lebih halus */
-            position: relative; 
-            z-index: 10;
-            margin-right: 8%; /* Memberi jarak dari tepi kanan layar */
-        }
-
-        /* Overlay tipis agar card login lebih terbaca jika background terlalu ramai */
-        .login-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.15); /* Transparansi sangat tipis */
         }
 
         .login-card { 
