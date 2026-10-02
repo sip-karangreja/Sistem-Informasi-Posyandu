@@ -1,318 +1,100 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistem Informasi Posyandu Harapan Bahagia">
-  <title>Sistem Informasi Posyandu Harapan Bahagia</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Posyandu Harapan Bahagia</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div id="loading-overlay" class="loading-overlay hidden">
-    <div class="spinner"></div>
-    <p id="loading-text">Memuat data...</p>
-  </div>
+    <nav class="navbar">
+        <div class="brand">Posyandu Harapan Bahagia</div>
+    </nav>
 
-  <div id="toast-container" class="toast-container"></div>
-
-  <!-- ========================= LOGIN ========================= -->
-  <section id="view-login" class="view view-login hidden">
-    <div class="login-shell">
-      <div class="login-brand">
-        <div class="brand-icon large"><i class="fa-solid fa-users-rays"></i></div>
-        <h1>Sistem Informasi<br><span>Posyandu</span></h1>
-        <p>Harapan Bahagia · Desa Karangreja</p>
-        <div class="login-tagline">
-          <i class="fa-solid fa-heart-pulse"></i>
-          Sehat Bersama, Menuju Generasi Emas
-        </div>
-      </div>
-
-      <div class="login-card">
-        <div class="login-heading">
-          <p class="eyebrow">SELAMAT DATANG</p>
-          <h2>Masuk ke sistem</h2>
-          <p>Gunakan akun kader atau admin yang terdaftar.</p>
-        </div>
-
-        <form id="login-form" novalidate>
-          <div class="field">
-            <label for="username">Username</label>
-            <div class="input-wrap">
-              <i class="fa-regular fa-user"></i>
-              <input id="username" name="username" type="text" autocomplete="username" placeholder="Masukkan username">
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="password">Kata Sandi</label>
-            <div class="input-wrap">
-              <i class="fa-solid fa-lock"></i>
-              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Masukkan kata sandi">
-              <button type="button" id="toggle-password" class="icon-button" aria-label="Tampilkan kata sandi">
-                <i id="eye-icon" class="fa-regular fa-eye"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="login-options">
-            <label class="checkbox">
-              <input id="remember" type="checkbox">
-              <span>Ingat saya</span>
-            </label>
-          </div>
-
-          <div id="login-error" class="form-error hidden"></div>
-
-          <button class="btn btn-primary btn-full" type="submit">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            Masuk
-          </button>
-        </form>
-
-        <p class="login-footer">Sistem terhubung ke Google Apps Script API.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================= APP ========================= -->
-  <section id="app-shell" class="app-shell hidden">
-    <aside id="sidebar" class="sidebar">
-      <div class="sidebar-brand">
-        <div class="brand-icon"><i class="fa-solid fa-users-rays"></i></div>
-        <div>
-          <strong>Sistem Informasi</strong>
-          <b>Posyandu</b>
-          <small>Desa Karangreja</small>
-        </div>
-      </div>
-
-      <nav class="sidebar-nav">
-        <button class="nav-item" data-route="dashboard">
-          <i class="fa-solid fa-house"></i><span>Beranda</span>
-        </button>
-        <button class="nav-item" data-route="peserta">
-          <i class="fa-solid fa-users"></i><span>Data Peserta</span>
-        </button>
-        <button class="nav-item disabled-nav" type="button">
-          <i class="fa-solid fa-stethoscope"></i><span>Layanan Posyandu</span>
-        </button>
-        <button class="nav-item disabled-nav" type="button">
-          <i class="fa-solid fa-chart-pie"></i><span>Rekap Laporan</span>
-        </button>
-        <button class="nav-item disabled-nav" type="button">
-          <i class="fa-solid fa-gear"></i><span>Pengaturan</span>
-        </button>
-      </nav>
-
-      <div class="sidebar-health">
-        <i class="fa-solid fa-heart-pulse"></i>
-        <strong>Sehat Bersama</strong>
-        <span>Menuju Generasi Emas</span>
-      </div>
-
-      <button id="logout-button" class="logout-button">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Keluar
-      </button>
-    </aside>
-
-    <div id="mobile-backdrop" class="mobile-backdrop hidden"></div>
-
-    <main class="main-content">
-      <header class="topbar">
-        <div class="topbar-left">
-          <button id="mobile-menu" class="icon-button mobile-menu" aria-label="Buka menu">
-            <i class="fa-solid fa-bars"></i>
-          </button>
-          <div>
-            <h2 id="page-title">Dashboard Ringkasan</h2>
-            <p id="page-subtitle">Ringkasan data Posyandu</p>
-          </div>
-        </div>
-
-        <div class="user-menu">
-          <div class="user-text">
-            <strong class="user-name-display">Petugas Posyandu</strong>
-            <span class="user-role-display">Kader</span>
-          </div>
-          <div class="avatar"><i class="fa-solid fa-user"></i></div>
-        </div>
-      </header>
-
-      <div class="page-container">
-
-        <!-- ================= DASHBOARD VIEW ================= -->
-        <section id="page-dashboard" class="page-view hidden">
-          <div class="welcome-card">
-            <div>
-              <p class="eyebrow">DASHBOARD</p>
-              <h1>Selamat Datang di<br><span>Sistem Informasi Posyandu Harapan Bahagia</span></h1>
-              <p>Data peserta posyandu yang sehat, keluarga yang kuat, desa yang sejahtera.</p>
-            </div>
-
-            <form id="dashboard-search-form" class="quick-search">
-              <label for="dashboard-search">Cari Data Cepat</label>
-              <div class="search-row">
-                <div class="input-wrap">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                  <input id="dashboard-search" type="search" placeholder="Masukkan nama atau NIK...">
-                </div>
-                <button class="btn btn-primary" type="submit">Cari</button>
-              </div>
-            </form>
-          </div>
-
-          <div class="stats-grid">
-            <article class="stat-card">
-              <div>
-                <span class="stat-label">Jumlah Total Peserta</span>
-                <strong id="stat-total">...</strong>
-                <small>orang</small>
-              </div>
-              <div class="stat-icon blue"><i class="fa-solid fa-users"></i></div>
-            </article>
-
-            <article class="chart-card">
-              <h3>Peserta Laki-laki & Perempuan</h3>
-              <div class="mini-chart"><canvas id="genderChart"></canvas></div>
-            </article>
-
-            <article class="chart-card">
-              <h3>Kepemilikan BPJS</h3>
-              <div class="mini-chart"><canvas id="bpjsChart"></canvas></div>
-            </article>
-
-            <article class="chart-card">
-              <h3>Status Gizi Balita (0-5 Thn)</h3>
-              <div class="mini-chart"><canvas id="giziChart"></canvas></div>
-            </article>
-          </div>
-
-          <div class="two-column">
-            <article class="panel">
-              <div class="panel-heading">
-                <h3><i class="fa-solid fa-chart-column"></i> Peserta Berdasarkan Kategori Usia</h3>
-              </div>
-              <div class="large-chart"><canvas id="ageChart"></canvas></div>
-            </article>
-
-            <article class="panel">
-              <div class="panel-heading">
-                <h3><i class="fa-solid fa-syringe"></i> Status Imunisasi Dasar Lengkap</h3>
-              </div>
-              <div class="progress-list">
-                <div class="progress-item"><div><span>BCG</span><b>95,1%</b></div><div class="progress"><i style="width:95.1%"></i></div></div>
-                <div class="progress-item"><div><span>DPT-HB-Hib 1 (Pentavalen)</span><b>92,0%</b></div><div class="progress"><i style="width:92%"></i></div></div>
-                <div class="progress-item"><div><span>DPT-HB-Hib 2 (Pentavalen)</span><b>88,7%</b></div><div class="progress"><i style="width:88.7%"></i></div></div>
-                <div class="progress-item"><div><span>Campak / MR</span><b>78,4%</b></div><div class="progress"><i style="width:78.4%"></i></div></div>
-              </div>
-            </article>
-          </div>
+    <main class="container">
+        <section class="search-box">
+            <input type="text" id="searchInput" placeholder="Ketik NIK, Nama Peserta, atau Nama Ibu...">
+            <button onclick="cariData()">Cari Data</button>
         </section>
 
-        <!-- ================= PESERTA VIEW ================= -->
-        <section id="page-peserta" class="page-view hidden">
-          <div class="search-panel">
-            <div>
-              <p class="eyebrow">DATA PESERTA</p>
-              <h1>Pencarian Peserta</h1>
-              <p>Cari berdasarkan NIK atau nama peserta.</p>
-            </div>
-            <form id="participant-search-form" class="participant-search">
-              <div class="input-wrap">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input id="participant-search" type="search" placeholder="Contoh: Budi atau 3201..." autocomplete="off">
-              </div>
-              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-search"></i> Cari</button>
-            </form>
-          </div>
-
-          <div id="participant-alert" class="alert hidden"></div>
-
-          <div id="participant-empty" class="empty-state">
-            <div class="empty-icon"><i class="fa-solid fa-user-magnifying-glass"></i></div>
-            <h3>Belum ada peserta yang dipilih</h3>
-            <p>Masukkan NIK atau nama pada kolom pencarian untuk melihat profil dan riwayat kesehatan.</p>
-          </div>
-
-          <div id="participant-content" class="hidden">
-            <article class="profile-card">
-              <div class="profile-photo"><i class="fa-solid fa-user"></i></div>
-
-              <div class="profile-info">
-                <div class="profile-name-row">
-                  <h2 id="p_nama">-</h2>
-                  <i class="fa-solid fa-circle-check verified"></i>
-                </div>
-                <div class="profile-fields">
-                  <div><span>NIK</span><strong id="p_nik">-</strong></div>
-                  <div><span>No. KK</span><strong id="p_kk">-</strong></div>
-                  <div><span>Tanggal Lahir</span><strong id="p_ttl">-</strong></div>
-                  <div><span>Jenis Kelamin</span><strong id="p_jk">-</strong></div>
-                  <div class="wide"><span>Alamat</span><strong id="p_alamat">-</strong></div>
-                </div>
-              </div>
-
-              <div class="status-card">
-                <div class="status-title"><span><i class="fa-solid fa-heart-pulse"></i> Status</span><b>Aktif</b></div>
-                <div class="status-row"><span>Kunjungan Terakhir</span><strong id="p_last_visit">-</strong></div>
-                <div class="status-row"><span>Posyandu</span><strong>Harapan Bahagia</strong></div>
-                <div class="status-row"><span>JaminanKes</span><strong id="p_bpjs" class="blue-text">-</strong></div>
-              </div>
-            </article>
-
-            <div class="tabs">
-              <button class="tab active"><i class="fa-solid fa-chart-line"></i> Riwayat Kesehatan</button>
-              <button class="tab" type="button" data-tab-disabled="true"><i class="fa-regular fa-clipboard"></i> Catatan Rekam Medis</button>
-              <button class="tab" type="button" data-tab-disabled="true"><i class="fa-solid fa-house-user"></i> Data Keluarga</button>
-              <button class="tab" type="button" data-tab-disabled="true"><i class="fa-solid fa-stethoscope"></i> Layanan Posyandu</button>
-            </div>
-
-            <div class="history-grid">
-              <div class="history-main">
-                <article class="panel">
-                  <div class="panel-heading history-heading">
-                    <h3><i class="fa-solid fa-chart-column"></i> Grafik Riwayat Kesehatan</h3>
-                    <span>Data dari Rekam_Medis</span>
-                  </div>
-
-                  <div class="health-charts">
-                    <div class="chart-box">
-                      <h4><i class="fa-solid fa-weight-scale"></i> Berat Badan (kg)</h4>
-                      <div class="history-chart"><canvas id="chartBB"></canvas></div>
-                    </div>
-                    <div class="chart-box">
-                      <h4><i class="fa-solid fa-ruler-vertical"></i> Tinggi Badan (cm)</h4>
-                      <div class="history-chart"><canvas id="chartTB"></canvas></div>
-                    </div>
-                  </div>
-                </article>
-
-                <div id="vitalCards" class="vital-grid"></div>
-              </div>
-
-              <article class="panel medical-log">
-                <div class="panel-heading">
-                  <h3><i class="fa-regular fa-clipboard"></i> Catatan Rekam Medis</h3>
-                </div>
-                <div id="logCatatan" class="log-list"></div>
-              </article>
-            </div>
-          </div>
+        <div id="loading" class="hidden">Memuat data dari server...</div>
+        <section id="contentArea">
+            <div class="empty-state">Silakan cari data peserta terlebih dahulu.</div>
         </section>
-
-      </div>
     </main>
-  </section>
 
-  <script src="app.js"></script>
+    <!-- Modal Form Input Hybrid -->
+    <div id="modalRekamMedis" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" onclick="tutupModal()">&times;</span>
+            <h2 id="modalTitle">Input Rekam Medis</h2>
+            <br>
+            <form id="formRM" onsubmit="tanganiSimpanData(event)">
+                <input type="hidden" id="formNik">
+                <input type="hidden" id="formKategori">
+                
+                <div class="form-group hidden" id="groupNamaIbu">
+                    <label>Nama Ibu (Wajib Terisi) <span class="req">*</span></label>
+                    <input type="text" id="namaIbu">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Berat Badan (Kg)</label>
+                        <input type="number" step="0.1" id="bb" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tinggi Badan (Cm)</label>
+                        <input type="number" step="0.1" id="tb" required>
+                    </div>
+                </div>
+
+                <!-- Field PTM Khusus Dewasa/Lansia -->
+                <div id="fieldPTM" class="hidden">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status Tensi (mmHg)</label>
+                            <input type="text" id="tensi" placeholder="Contoh: 120/80">
+                        </div>
+                        <div class="form-group">
+                            <label>Gula Darah (mg/dL)</label>
+                            <input type="number" id="gula">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Kolesterol</label>
+                            <input type="number" id="kolesterol">
+                        </div>
+                        <div class="form-group">
+                            <label>Asam Urat</label>
+                            <input type="number" step="0.1" id="asam_urat">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Catatan Pemeriksaan</label>
+                    <textarea id="catatan" rows="3" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit" id="btnSubmit">Simpan Rekam Medis</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CUSTOM ALERT OVERLAY -->
+    <div id="customAlert" class="custom-alert hidden">
+        <div class="alert-box">
+            <h3 id="alertTitle" class="alert-title">Judul</h3>
+            <p id="alertMsg" class="alert-message">Pesan alert.</p>
+            <div class="alert-actions">
+                <button id="alertBtnCancel" class="btn-alert btn-alert-cancel">Batal</button>
+                <button id="alertBtnConfirm" class="btn-alert btn-alert-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
