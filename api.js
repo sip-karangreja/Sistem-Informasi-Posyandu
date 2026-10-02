@@ -5,7 +5,7 @@
  * API_URL wajib diganti dengan URL Web App Apps Script Anda.
  */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxyz123_ganti_ini/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwO2sAvN5bhYUe7PrGY0fnWLwFlUt-tKD8mDiJY_99v0Ah9ltGeDOQG8fJHj0dTtbk74A/exec";
 
 const SESSION_KEY = "posyandu_session";
 const SESSION_MAX_AGE = 24 * 60 * 60 * 1000;
