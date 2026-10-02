@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Posyandu Harapan Bahagia</title>
+    <!-- Tailwind CSS untuk Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js untuk Grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; }
+        .sidebar { background-color: #ffffff; border-right: 1px solid #e5e7eb; }
+        .sidebar-item { padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 0.25rem; color: #4b5563; transition: all 0.2s; }
+        .sidebar-item:hover, .sidebar-item.active { background-color: #3b82f6; color: white; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .chart-container { position: relative; height: 250px; width: 100%; }
+        
+        /* Loading Overlay */
+        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Loading Indicator -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p class="mt-4 text-gray-600 font-medium">Memuat data dari database...</p>
+    </div>
+
+    <!-- Sidebar Kiri -->
+    <aside class="sidebar w-64 h-full flex flex-col hidden md:flex">
+        <!-- Logo & Title -->
+        <div class="p-4 flex items-center gap-3 border-b border-gray-100">
+            <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
+                <i class="fa-solid fa-users-rays text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-sm text-gray-800 leading-tight">Sistem Informasi<br><span class="text-blue-600 text-base">Posyandu</span></h1>
+                <p class="text-[10px] text-gray-500">Desa Karangreja</p>
+            </div>
+        </div>
+
+        <!-- Menu Navigation -->
+        <nav class="flex-1 p-4 space-y-1">
+            <a href="#" class="sidebar-item flex items-center gap-3"><i class="fa-solid fa-house w-5"></i> Beranda</a>
+            <a href="#" class="sidebar-item active flex items-center gap-3"><i class="fa-solid fa-users w-5"></i> Data Peserta</a>
+            <a href="#" class="sidebar-item flex items-center gap-3"><i class="fa-solid fa-stethoscope w-5"></i> Layanan Posyandu</a>
+            <a href="#" class="sidebar-item flex items-center gap-3"><i class="fa-solid fa-chart-pie w-5"></i> Rekap Laporan</a>
+            <a href="#" class="sidebar-item flex items-center gap-3"><i class="fa-solid fa-gear w-5"></i> Pengaturan</a>
+        </nav>
+
+        <!-- Illustration -->
+        <div class="p-4 bg-green-50 m-4 rounded-xl text-center border border-green-100">
+            <i class="fa-solid fa-heart-pulse text-green-500 text-3xl mb-2"></i>
+            <p class="text-xs font-semibold text-green-800">Sehat Bersama,<br>Menuju Generasi Emas</p>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 flex flex-col h-full bg-slate-50 overflow-y-auto">
+        
+        <!-- Header Top Bar -->
+        <header class="bg-white border-b border-gray-200 p-4 flex justify-between items-center sticky top-0 z-10">
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-xl flex gap-2">
+                <div class="relative w-full">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" id="searchInput" placeholder="Cari berdasarkan nama/NIK (Contoh: Budi atau 3201...)" class="w-full pl-10 pr-4 py-2 bg-gray-100 border-transparent rounded-lg focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none text-sm">
+                </div>
+                <button onclick="cariPeserta()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                    <i class="fa-solid fa-magnifying-glass"></i> Cari
+                </button>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="flex items-center gap-3 ml-4">
+                <div class="text-right hidden sm:block">
+                    <p class="text-sm font-bold text-gray-800">Ibu Sulastri</p>
+                    <p class="text-xs text-gray-500">Kader Posyandu</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="p-6 max-w-7xl mx-auto w-full space-y-6">
+            
+            <!-- Alert Info -->
+            <div id="alertBox" class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl text-sm hidden">
+                <i class="fa-solid fa-circle-info mr-2"></i> <span id="alertMessage">Silakan cari data peserta di kolom pencarian.</span>
+            </div>
+
+            <!-- Kartu Profil Detail -->
+            <div id="profilContainer" class="bg-white rounded-2xl p-6 card-shadow border border-gray-100 flex flex-col md:flex-row gap-6 hidden">
+                <!-- Foto -->
+                <div class="w-32 h-40 bg-gray-200 rounded-xl overflow-hidden flex-shrink-0 flex justify-center items-center">
+                    <i class="fa-solid fa-image text-4xl text-gray-400"></i>
+                </div>
+                
+                <!-- Info Biodata -->
+                <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-y-3 text-sm">
+                    <div class="col-span-full mb-2">
+                        <h2 id="p_nama" class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                            Nama Peserta <i class="fa-solid fa-circle-check text-blue-500 text-lg"></i>
+                        </h2>
+                    </div>
+                    
+                    <div class="text-gray-500">NIK</div>
+                    <div class="font-medium text-gray-800" id="p_nik">-</div>
+                    
+                    <div class="text-gray-500">No. KK</div>
+                    <div class="font-medium text-gray-800" id="p_kk">-</div>
+                    
+                    <div class="text-gray-500">Tanggal Lahir</div>
+                    <div class="font-medium text-gray-800" id="p_ttl">-</div>
+                    
+                    <div class="text-gray-500">Jenis Kelamin</div>
+                    <div class="font-medium text-gray-800" id="p_jk">-</div>
+                    
+                    <div class="text-gray-500">Alamat</div>
+                    <div class="font-medium text-gray-800" id="p_alamat">-</div>
+                </div>
+
+                <!-- Status Aktif -->
+                <div class="md:w-64 bg-green-50 p-4 rounded-xl border border-green-100 flex flex-col justify-center items-center text-center">
+                    <i class="fa-solid fa-heart-circle-check text-4xl text-green-500 mb-2"></i>
+                    <h3 class="font-bold text-green-800">Status Peserta Aktif</h3>
+                    <p class="text-xs text-green-600 mt-1">Terdaftar di Posyandu Harapan Bahagia</p>
+                    <span id="p_bpjs" class="mt-3 px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-semibold">-</span>
+                </div>
+            </div>
+
+            <!-- Tab Menu -->
+            <div id="tabContainer" class="border-b border-gray-200 hidden">
+                <nav class="-mb-px flex gap-8">
+                    <a href="#" class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line"></i> Grafik Riwayat Kesehatan
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Area Data Historis -->
+            <div id="historiContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
+                
+                <!-- Kolom Kiri: Grafik -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Grafik BB & TB -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-5 rounded-2xl card-shadow border border-gray-100">
+                            <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-weight-scale text-green-500"></i> Berat Badan (kg)</h3>
+                            <div class="chart-container"><canvas id="chartBB"></canvas></div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl card-shadow border border-gray-100">
+                            <h3 class="font-bold text-gray-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-ruler-vertical text-blue-500"></i> Tinggi Badan (cm)</h3>
+                            <div class="chart-container"><canvas id="chartTB"></canvas></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Info Tambahan Berupa Card (Gula/Tensi) -->
+                    <div class="grid grid-cols-2 gap-4" id="vitalCards">
+                        <!-- Akan diisi oleh JS -->
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Log Catatan Medis -->
+                <div class="bg-white p-5 rounded-2xl card-shadow border border-gray-100 h-full flex flex-col">
+                    <h3 class="font-bold text-gray-700 mb-4 flex items-center justify-between border-b pb-3">
+                        <span><i class="fa-regular fa-clipboard text-blue-600 mr-2"></i> Catatan Rekam Medis</span>
+                    </h3>
+                    <div class="flex-1 overflow-y-auto space-y-4 pr-2" id="logCatatan">
+                        <!-- Log data akan di-render di sini -->
+                    </div>
+                </div>
+                
+            </div> <!-- End Grid -->
+            
+        </div> <!-- End Max-W Container -->
+    </main>
+
+    <script>
+        // ==============================================================
+        // Konfigurasi API Apps Script
+        // PENTING: Ganti URL di bawah ini dengan Web App URL milik Anda
+        // ==============================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbxyz123_ganti_ini_dengan_url_apps_script_anda/exec"; 
+        // ==============================================================
+
+        let chartInstanceBB = null;
+        let chartInstanceTB = null;
+
+        // Fungsi menampilkan/menyembunyikan loading
+        function showLoading(show) {
+            document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none';
+        }
+
+        // Fungsi Utama: Mencari Peserta
+        async function cariPeserta() {
+            const input = document.getElementById('searchInput').value.trim();
+            if(!input) return alert('Masukkan NIK atau Nama peserta!');
+
+            showLoading(true);
+            try {
+                // Fetch (GET) ke API Apps Script
+                const response = await fetch(`${API_URL}?action=searchPeserta&query=${encodeURIComponent(input)}`);
+                const result = await response.json();
+                
+                if(result.status === 'success' && result.data.length > 0) {
+                    const pasien = result.data[0]; // Ambil data pertama yg cocok
+                    tampilkanProfil(pasien);
+                    
+                    // Setelah profil muncul, tarik riwayat medisnya menggunakan NIK
+                    await ambilRiwayat(pasien.NIK);
+                } else {
+                    tampilkanAlert('Data peserta tidak ditemukan di database.', 'red');
+                    sembunyikanKonten();
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                // tampilkanAlert('Gagal terhubung ke database. Cek konfigurasi URL API.', 'red');
+                
+                // DEMO MODE (Jika API_URL belum di-set)
+                if(API_URL.includes("ganti_ini")) {
+                    console.warn("DEMO MODE AKTIF karena API URL belum disetting.");
+                    demoModeRender();
+                }
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function tampilkanProfil(p) {
+            document.getElementById('alertBox').classList.add('hidden');
+            document.getElementById('profilContainer').classList.remove('hidden');
+            document.getElementById('tabContainer').classList.remove('hidden');
+            document.getElementById('historiContainer').classList.remove('hidden');
+
+            document.getElementById('p_nama').innerHTML = `${p.Nama_Peserta || 'N/A'} <i class="fa-solid fa-circle-check text-blue-500 text-lg"></i>`;
+            document.getElementById('p_nik').innerText = p.NIK || '-';
+            document.getElementById('p_kk').innerText = p.No_KK || '-';
+            
+            // Format Umur (Simulasi)
+            let umur = "";
+            if(p.Tanggal_Lahir) {
+                try {
+                    let d = new Date(p.Tanggal_Lahir);
+                    let diffYear = new Date().getFullYear() - d.getFullYear();
+                    umur = `(${diffYear} tahun)`;
+                } catch(e){}
+            }
+            document.getElementById('p_ttl').innerText = `${p.Tanggal_Lahir || '-'} ${umur}`;
+            document.getElementById('p_jk').innerText = p.Jenis_Kelamin || '-';
+            document.getElementById('p_alamat').innerText = `Dusun ${p.Dusun || '-'} RT ${p.RT || '-'}/RW ${p.RW || '-'}`;
+            document.getElementById('p_bpjs').innerText = p.BPJS_Kesehatan || '-';
+        }
+
+        function tampilkanAlert(msg, color='blue') {
+            const box = document.getElementById('alertBox');
+            box.className = `bg-${color}-50 border border-${color}-200 text-${color}-800 p-4 rounded-xl text-sm mb-4 block`;
+            document.getElementById('alertMessage').innerText = msg;
+        }
+
+        function sembunyikanKonten() {
+            document.getElementById('profilContainer').classList.add('hidden');
+            document.getElementById('tabContainer').classList.add('hidden');
+            document.getElementById('historiContainer').classList.add('hidden');
+        }
+
+        async function ambilRiwayat(nik) {
+            try {
+                const response = await fetch(`${API_URL}?action=getRiwayat&nik=${nik}`);
+                const result = await response.json();
+                if(result.status === 'success') {
+                    renderGrafikDanLog(result.data);
+                }
+            } catch (error) {
+                console.error("Gagal mengambil riwayat:", error);
+            }
+        }
+
+        function renderGrafikDanLog(riwayatData) {
+            // Urutkan data berdasarkan waktu lama ke baru untuk grafik
+            riwayatData.reverse(); 
+
+            const labels = [];
+            const dataBB = [];
+            const dataTB = [];
+            
+            let htmlLog = "";
+            let latestTensi = "-";
+            let latestGula = "-";
+
+            riwayatData.forEach((r, index) => {
+                // Parsing bulan/tanggal
+                let labelBulan = `Pertemuan ${index+1}`;
+                if(r.Timestamp) {
+                    try { labelBulan = r.Timestamp.split(' ')[0] || r.Timestamp; } catch(e){}
+                }
+                labels.push(labelBulan);
+                dataBB.push(r.Berat_Badan_Kg || 0);
+                dataTB.push(r.Tinggi_Badan_Cm || 0);
+
+                latestTensi = r.Tensi_Darah || latestTensi;
+                latestGula = r.Gula_Darah || latestGula;
+
+                // Render Log Teks (Urutan dibalik agar terbaru di atas)
+                htmlLog = `
+                <div class="relative pl-4 border-l-2 border-blue-200 pb-4">
+                    <div class="absolute w-3 h-3 bg-blue-500 rounded-full -left-[7px] top-1"></div>
+                    <p class="text-xs text-gray-500 font-semibold">${r.Timestamp || 'Tgl Tidak Tersedia'}</p>
+                    <p class="text-sm text-gray-800 mt-1 leading-relaxed">
+                        BB: <b>${r.Berat_Badan_Kg}kg</b>, TB: <b>${r.Tinggi_Badan_Cm}cm</b>, Tensi: <b>${r.Tensi_Darah}</b>.<br>
+                        Catatan: <span class="italic text-gray-600">${r.Catatan_Kader || 'Tidak ada catatan'}</span>
+                    </p>
+                </div>` + htmlLog;
+            });
+
+            document.getElementById('logCatatan').innerHTML = htmlLog || "<p class='text-sm text-gray-400'>Belum ada riwayat medis.</p>";
+
+            // Render Kartu Vital Terakhir
+            document.getElementById('vitalCards').innerHTML = `
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100 flex items-center gap-4">
+                    <i class="fa-solid fa-heart-pulse text-3xl text-red-400"></i>
+                    <div><p class="text-xs text-red-800 font-bold">Tensi Darah Terakhir</p><p class="text-xl font-bold text-red-600">${latestTensi}</p></div>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-100 flex items-center gap-4">
+                    <i class="fa-solid fa-droplet text-3xl text-purple-400"></i>
+                    <div><p class="text-xs text-purple-800 font-bold">Gula Darah Terakhir</p><p class="text-xl font-bold text-purple-600">${latestGula} <span class="text-sm">mg/dL</span></p></div>
+                </div>
+            `;
+
+            gambarGrafik(labels, dataBB, dataTB);
+        }
+
+        function gambarGrafik(labels, dataBB, dataTB) {
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            
+            if(chartInstanceBB) chartInstanceBB.destroy();
+            if(chartInstanceTB) chartInstanceTB.destroy();
+
+            // Config untuk chart Berat Badan (Garis Hijau)
+            const ctxBB = document.getElementById('chartBB').getContext('2d');
+            chartInstanceBB = new Chart(ctxBB, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Berat Badan (kg)',
+                        data: dataBB,
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true,
+                        pointBackgroundColor: '#22c55e'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // Config untuk chart Tinggi Badan (Garis Biru)
+            const ctxTB = document.getElementById('chartTB').getContext('2d');
+            chartInstanceTB = new Chart(ctxTB, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Tinggi Badan (cm)',
+                        data: dataTB,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true,
+                        pointBackgroundColor: '#3b82f6'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        // Fungsi simulasi data untuk preview (Jika belum setup Apps Script)
+        function demoModeRender() {
+            const demoPasien = {
+                NIK: "3201015208040001", No_KK: "3201010101234567", Nama_Peserta: "Siti Nurhaliza (Data Demo)",
+                Tanggal_Lahir: "2004-08-12", Jenis_Kelamin: "Perempuan", Dusun: "Krajan", RT: "02", RW: "01",
+                BPJS_Kesehatan: "Memiliki BPJS"
+            };
+            const demoRiwayat = [
+                { Timestamp: "Okt 2026", Berat_Badan_Kg: 52, Tinggi_Badan_Cm: 158, Tensi_Darah: "120/80", Gula_Darah: 95, Catatan_Kader: "Kondisi umum sangat baik." },
+                { Timestamp: "Nov 2026", Berat_Badan_Kg: 53, Tinggi_Badan_Cm: 158, Tensi_Darah: "118/80", Gula_Darah: 90, Catatan_Kader: "Stabil, pertahankan." },
+                { Timestamp: "Des 2026", Berat_Badan_Kg: 52, Tinggi_Badan_Cm: 158, Tensi_Darah: "122/82", Gula_Darah: 92, Catatan_Kader: "Jaga pola makan." }
+            ];
+            
+            tampilkanProfil(demoPasien);
+            renderGrafikDanLog(demoRiwayat);
+            
+            const alert = document.getElementById('alertBox');
+            alert.classList.remove('hidden');
+            alert.className = "bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-xl text-sm mb-4 block";
+            document.getElementById('alertMessage').innerHTML = "<b>Mode Demo Aktif:</b> Data ini adalah simulasi karena URL API Google Apps Script belum di-set di dalam kode. Ganti <code>API_URL</code> pada baris kode JavaScript.";
+        }
+        
+        // Listener tombol enter pada input pencarian
+        document.getElementById("searchInput").addEventListener("keypress", function(event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            cariPeserta();
+          }
+        });
+    </script>
+</body>
+</html>
