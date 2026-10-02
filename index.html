@@ -8,160 +8,183 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* === RESET & FONT === */
+        /* */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f7fa; color: #333; overflow-x: hidden; }
 
-        /* === HALAMAN LOGIN (Sesuai Desain Gambar) === */
-        /* Menggunakan gambar ilustrasi sebagai background penuh */
+        /* */
         .login-wrapper { 
             display: flex; 
-            justify-content: flex-end; /* Memposisikan form di sebelah kanan */
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 2rem; 
-            background: url('WhatsApp Image 2026-09-18 at 10.15.57 PM (1).jpeg') no-repeat center center; 
-            background-size: cover;
+            width: 100vw;
+            height: 100vh; 
+            position: relative;
+            background-color: #f0f8ff; /* Warna fallback */
+        }
+
+        .login-left {
+            flex: 6.5; /* Mengambil 65% lebar layar */
+            /* Menggunakan placeholder, silakan ganti URL ini dengan URL/path gambar asli Anda nantinya */
+            background: url('https://placehold.co/1200x800/e0f2f1/198754?text=Area+Gambar+Ilustrasi+Posyandu') center center / cover no-repeat;
             position: relative;
         }
 
-        /* Overlay tipis agar card login lebih terbaca jika background terlalu ramai */
-        .login-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.15); /* Transparansi sangat tipis */
-        }
-
-        .login-card { 
-            background: #ffffff; 
-            width: 100%; 
-            max-width: 420px; 
-            padding: 2.5rem 2.5rem; 
-            border-radius: 20px; /* Sudut lebih membulat sesuai desain */
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
-            position: relative; 
-            z-index: 10;
-            border: 2px solid #0056b3; /* Garis tepi biru tipis */
-        }
-
-        .login-header { text-align: center; margin-bottom: 2rem; }
-        
-        /* Logo Posyandu (Placeholder logo bulat) */
-        .login-logo {
-            width: 100px;
-            height: 100px;
-            background: #fff;
-            border-radius: 50%;
-            border: 3px solid #8e44ad; /* Warna ungu pinggiran logo */
-            margin: 0 auto 15px auto;
+        .login-right {
+            flex: 3.5; /* Mengambil 35% lebar layar */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
-            color: #27ae60;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-left: 2px solid #eee;
+            z-index: 10;
         }
 
+        /* Banner ungu di bagian paling bawah layar login */
+        .login-bottom-banner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #6f42c1; /* Warna Ungu */
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 20;
+        }
+
+        /* */
+        .login-card { 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 2rem; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            background: #ffffff;
+            border: 1px solid #eaeaea;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 3rem;
+            color: #0d6efd;
+            background: linear-gradient(45deg, #6f42c1, #e83e8c, #0d6efd, #198754);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-header { text-align: center; margin-bottom: 2rem; }
         .login-header h2 { 
-            color: #8e44ad; /* Warna ungu teks POSYANDU */
-            font-size: 1.6rem; 
-            margin-bottom: 2px;
+            font-size: 1.4rem; 
+            margin-bottom: 8px;
             font-weight: 800;
-            letter-spacing: 1px;
+            color: #6f42c1; /* Warna ungu dominan */
+            line-height: 1.2;
         }
-        .login-header h3 {
-            color: #d35400; /* Warna orange teks HARAPAN BAHAGIA */
-            font-size: 1.2rem;
-            margin-bottom: 2px;
-        }
-        .login-header h4 {
-            color: #27ae60; /* Warna hijau teks KARANGREJA */
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        .login-header p { 
-            color: #c0392b; /* Merah untuk slogan */
-            font-size: 0.9rem; 
+        
+        .login-header .subtitle { 
+            color: #e83e8c; /* Warna pink/magenta */
+            font-size: 0.95rem; 
             font-weight: 600;
         }
 
-        /* Form Input dengan Icon */
+        /* */
         .input-group {
             position: relative;
             margin-bottom: 1.2rem;
         }
-        .input-group i.fa-solid {
+
+        .input-group .icon {
             position: absolute;
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #555;
-            font-size: 1.1rem;
+            color: #6c757d;
         }
-        .input-group input { 
-            width: 100%; 
-            padding: 12px 15px 12px 45px; /* Padding kiri lebih besar untuk icon */
-            border: 1px solid #aaa; 
-            border-radius: 10px; 
-            font-size: 1rem; 
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        .input-group input:focus { border-color: #27ae60; }
-        .input-group .fa-eye {
+
+        .input-group .icon-right {
             position: absolute;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #888;
+            color: #6c757d;
             cursor: pointer;
         }
 
+        .input-group input {
+            width: 100%;
+            padding: 14px 15px 14px 45px; /* Padding kiri lebih besar untuk ikon */
+            border: 1.5px solid #ced4da;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus { border-color: #198754; }
+
         .login-options { 
             display: flex;
+            justify-content: flex-start;
             align-items: center; 
             margin-bottom: 20px; 
-            font-size: 0.95rem; 
-            color: #555;
+            font-size: 0.9rem; 
         }
-        .login-options input[type="checkbox"] { margin-right: 8px; transform: scale(1.2); }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            cursor: pointer;
+        }
         
         .btn-login-main { 
             width: 100%; 
             padding: 14px; 
-            background: #27ae60; /* Hijau tombol login */
+            background: #198754; /* Warna hijau sesuai gambar */
             color: white; 
             border: none; 
             border-radius: 10px; 
-            font-size: 1.1rem; 
+            font-size: 1.05rem; 
             font-weight: bold; 
             cursor: pointer; 
             transition: background 0.2s; 
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
-        .btn-login-main:hover { background: #219150; }
+        
+        .btn-login-main:hover { background: #157347; }
 
         .login-footer-links {
             display: flex;
             justify-content: space-between;
-            margin-top: 25px;
+            margin-top: 20px;
             font-size: 0.85rem;
-            color: #0056b3;
+        }
+
+        .login-footer-links a {
+            color: #0d6efd;
+            text-decoration: none;
             font-weight: 600;
         }
-        .login-footer-links a { color: #0056b3; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+
         .login-footer-links a:hover { text-decoration: underline; }
 
-        /* Responsif untuk Mobile (Card login ke tengah) */
+        /* Responsif Mobile untuk Login */
         @media (max-width: 768px) {
-            .login-wrapper { justify-content: center; padding: 1rem; }
+            .login-wrapper { flex-direction: column; }
+            .login-left { display: none; } /* Sembunyikan gambar ilustrasi di HP agar fokus ke form */
+            .login-right { flex: 1; width: 100%; border-left: none; }
+            .login-card { box-shadow: none; border: none; padding: 1rem; }
+            .login-bottom-banner { font-size: 0.75rem; padding: 12px; }
         }
 
-
-        /* === DASHBOARD APLIKASI (Minimalis) === */
+        /* */
         .navbar { background-color: #0d6efd; color: white; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .btn-logout { background: transparent; border: 1px solid white; color: white; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
         .btn-logout:hover { background: rgba(255,255,255,0.2); }
@@ -177,7 +200,7 @@
         .profil-info p { margin: 5px 0; color: #555; font-size: 0.95rem; }
         .btn-tambah { width: 100%; background: #0d6efd; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 15px; font-size: 1rem; }
 
-        /* === MODAL & FORM (Minimalis) === */
+        /* */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; padding: 1rem; z-index: 1000; }
         .modal-content { background: white; padding: 1.5rem; border-radius: 10px; width: 100%; max-width: 500px; position: relative; max-height: 90vh; overflow-y: auto; }
         .close-btn { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #666; }
@@ -190,11 +213,11 @@
         .btn-submit { width: 100%; padding: 14px; background: #198754; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: bold; }
         .hidden { display: none !important; }
 
-        /* === CUSTOM ALERT === */
-        .custom-alert { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 1rem; }
+        /* */
+        .custom-alert { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 1rem; backdrop-filter: blur(2px); }
         .alert-box { background: #ffffff; width: 100%; max-width: 320px; border-radius: 12px; padding: 24px 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease-out; }
         .alert-title { font-size: 1.25rem; font-weight: 700; color: #333; margin-bottom: 10px; }
-        .alert-message { font-size: 0.95rem; color: #555; margin-bottom: 24px; }
+        .alert-message { font-size: 0.95rem; color: #555; margin-bottom: 24px; line-height: 1.5; }
         .alert-actions { display: flex; gap: 10px; justify-content: center; }
         .btn-alert { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
         .btn-alert-cancel { background: #e9ecef; color: #495057; }
@@ -204,55 +227,63 @@
 </head>
 <body>
 
-    <!-- ==========================================
-         HALAMAN LOGIN
-    ========================================== -->
+    <!-- -->
     <div id="loginSection" class="login-wrapper">
-        <div class="login-card">
-            <div class="login-header">
-                <!-- Logo Bulat (Menggunakan ikon fontawesome sementara) -->
+        <!-- Sisi Kiri (Gambar Ilustrasi) -->
+        <div class="login-left"></div>
+        
+        <!-- Sisi Kanan (Form Login) -->
+        <div class="login-right">
+            <div class="login-card">
                 <div class="login-logo">
-                    <i class="fa-solid fa-people-group"></i>
+                    <i class="fa-solid fa-hands-holding-child"></i>
                 </div>
-                <h2>POSYANDU</h2>
-                <h3>HARAPAN BAHAGIA</h3>
-                <h4>KARANGREJA</h4>
-                <p><i class="fa-regular fa-heart"></i> Sehat Bersama, Tumbuh Bahagia <i class="fa-regular fa-heart"></i></p>
-            </div>
-            
-            <form id="loginForm" onsubmit="prosesLogin(event)">
-                <div class="input-group">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="username" placeholder="Username" required>
+                <div class="login-header">
+                    <h2>POSYANDU<br>HARAPAN BAHAGIA<br>KARANGREJA</h2>
+                    <p class="subtitle"><i class="fa-regular fa-heart"></i> Sehat Bersama, Tumbuh Bahagia <i class="fa-regular fa-heart"></i></p>
                 </div>
                 
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="password" placeholder="Password" required>
-                    <i class="fa-solid fa-eye" id="togglePassword" onclick="togglePass()"></i>
-                </div>
-                
-                <div class="login-options">
-                    <label>
-                        <input type="checkbox" id="rememberMe"> Ingat Saya
-                    </label>
-                </div>
-                
-                <button type="submit" class="btn-login-main" id="btnLogin">
-                    <i class="fa-solid fa-heart-pulse"></i> LOGIN
-                </button>
+                <form id="loginForm" onsubmit="prosesLogin(event)">
+                    <div class="input-group">
+                        <i class="fa-solid fa-user icon"></i>
+                        <input type="text" id="username" placeholder="Username" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock icon"></i>
+                        <input type="password" id="password" placeholder="Password" required>
+                        <i class="fa-solid fa-eye icon-right" id="togglePasswordIcon" onclick="togglePass()"></i>
+                    </div>
+                    
+                    <div class="login-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe"> Ingat Saya
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-login-main" id="btnLogin">
+                        <i class="fa-solid fa-heart-circle-plus"></i> LOGIN
+                    </button>
+                </form>
 
                 <div class="login-footer-links">
-                    <a href="#" onclick="alert('Silakan hubungi Bidan Desa untuk reset password.')"><i class="fa-solid fa-lock-open"></i> Lupa Password?</a>
-                    <a href="#"><i class="fa-solid fa-headset"></i> Hubungi Admin</a>
+                    <a href="#" onclick="tampilkanAlert('Bantuan Akses', 'Silakan hubungi Bidan Desa untuk reset password.', 'info')">
+                        <i class="fa-solid fa-lock"></i> Lupa Password?
+                    </a>
+                    <a href="#" onclick="tampilkanAlert('Kontak Admin', 'Hubungi Admin di nomor WA 0812-3456-7890.', 'info')">
+                        <i class="fa-solid fa-headset"></i> Hubungi Admin
+                    </a>
                 </div>
-            </form>
+            </div>
+        </div>
+
+        <!-- Banner Bawah (Footer Login) -->
+        <div class="login-bottom-banner">
+            <i class="fa-regular fa-heart"></i> Posyandu Harapan Bahagia Karangreja &copy; 2026 <i class="fa-regular fa-heart"></i>
         </div>
     </div>
 
-    <!-- ==========================================
-         HALAMAN DASHBOARD (Disembunyikan di awal)
-    ========================================== -->
+    <!-- -->
     <div id="dashboardSection" class="hidden">
         <nav class="navbar">
             <div class="brand">Posyandu Harapan Bahagia</div>
@@ -275,9 +306,7 @@
         </main>
     </div>
 
-    <!-- ==========================================
-         MODAL FORM REKAM MEDIS
-    ========================================== -->
+    <!-- -->
     <div id="modalRekamMedis" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="tutupModal()">&times;</span>
@@ -326,9 +355,7 @@
         </div>
     </div>
 
-    <!-- ==========================================
-         CUSTOM ALERT
-    ========================================== -->
+    <!-- -->
     <div id="customAlert" class="custom-alert hidden">
         <div class="alert-box">
             <h3 id="alertTitle" class="alert-title">Judul</h3>
@@ -340,14 +367,12 @@
         </div>
     </div>
 
-    <!-- ==========================================
-         JAVASCRIPT
-    ========================================== -->
+    <!-- -->
     <script>
-        // Fitur Toggle Show/Hide Password di Form Login
+        // --- Fitur Toggle Show/Hide Password di Form Login ---
         function togglePass() {
             const passInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('togglePassword');
+            const eyeIcon = document.getElementById('togglePasswordIcon');
             if (passInput.type === "password") {
                 passInput.type = "text";
                 eyeIcon.classList.remove("fa-eye");
@@ -364,7 +389,6 @@
             e.preventDefault();
             const btn = document.getElementById('btnLogin');
             const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
             
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memeriksa...';
             btn.disabled = true;
@@ -374,13 +398,12 @@
             if (user === 'admin' || user === 'kader') {
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('dashboardSection').classList.remove('hidden');
-                // Mengembalikan warna body ke abu-abu terang (menghilangkan sisa warna gambar jika ada)
                 document.body.style.background = "#f4f7fa"; 
             } else {
-                await tampilkanAlert("Login Gagal", "Username/Password salah. Ketik 'admin' atau 'kader'.", "info");
+                await tampilkanAlert("Login Gagal", "Username/Password salah. Untuk demo, ketik 'admin' atau 'kader'.", "info");
             }
 
-            btn.innerHTML = '<i class="fa-solid fa-heart-pulse"></i> LOGIN';
+            btn.innerHTML = '<i class="fa-solid fa-heart-circle-plus"></i> LOGIN';
             btn.disabled = false;
         }
 
@@ -388,7 +411,7 @@
             document.getElementById('dashboardSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
             document.getElementById('loginForm').reset();
-            // Kembalikan background ke mode form (meski sudah diset di CSS wrapper)
+            // Reset state dashboard
             document.getElementById('contentArea').innerHTML = `<div class="empty-state"><h3>Selamat Datang!</h3><p>Silakan cari data peserta.</p></div>`;
             document.getElementById('searchInput').value = "";
         }
@@ -409,8 +432,8 @@
                     btnConfirm.style.background = "#198754"; 
                 } else {
                     btnCancel.classList.add('hidden');
-                    btnConfirm.innerText = "OK";
-                    btnConfirm.style.background = "#27ae60"; // Hijau Login
+                    btnConfirm.innerText = "OK Mengerti";
+                    btnConfirm.style.background = "#0d6efd"; 
                 }
 
                 alertUI.classList.remove('hidden');
@@ -434,6 +457,7 @@
             loading.classList.remove('hidden');
             await new Promise(r => setTimeout(r, 600));
             
+            // Dummy berdasarkan data real
             const dummyData = [
                 { NIK: "3173024201620004", NAMA_PESERTA: "ABYAN HARIS MAULANA", KATEGORI_USIA: "Balita", USIA: 4, NAMA_IBU: "Ibu Abyan", NAMA_KK: "Bapak Abyan", DUSUN: "Krajan", RT: "01", RW: "02" },
                 { NIK: "3301076005720001", NAMA_PESERTA: "SITI AMINAH", KATEGORI_USIA: "Dewasa", USIA: 35, NAMA_IBU: "-", NAMA_KK: "Bapak Siti", DUSUN: "Kampung Baru", RT: "03", RW: "01" }
@@ -494,12 +518,16 @@
             e.preventDefault();
             const konfirmasi = await tampilkanAlert("Konfirmasi Simpan", "Apakah Anda yakin data kesehatan yang diinput sudah benar?", "confirm");
             if (!konfirmasi) return;
+            
             const btn = document.getElementById('btnSubmitRM');
             btn.innerText = 'Menyimpan...';
             btn.disabled = true;
+            
             await new Promise(r => setTimeout(r, 1000));
+            
             tutupModal();
             await tampilkanAlert("Berhasil", "Data rekam medis berhasil disimpan!", "info");
+            
             btn.innerText = 'Simpan Rekam Medis';
             btn.disabled = false;
         }
